@@ -10,27 +10,20 @@ def __read_config(file_path: str):
     data_dict = { key : str(data_configs.get(key).data) for key in data_configs }
     return data_dict
 
-__db_config = __read_config('./config/db.properties')
+db_config = __read_config('./config/db.properties')
+data_config = __read_config('./config/data.properties')
+
 class DbConfig:
-    HOST = __db_config['DB_HOST']
-    PORT = __db_config['DB_PORT']
-    USER = __db_config['DB_USER']
-    PASSWORD = __db_config['DB_PASSWORD']
+    HOST = db_config['DB_HOST']
+    PORT = db_config['DB_PORT']
+    USER = db_config['DB_USER']
+    PASSWORD = db_config['DB_PASSWORD']
     
     class Schema:
-        SOR = __db_config['DB_SOR_SCHEMA']
-        STG = __db_config['DB_STG_SCHEMA']
+        SOR = db_config['DB_SOR_SCHEMA']
+        STG = db_config['DB_STG_SCHEMA']
 
-__data_config = __read_config('./config/data.properties')
 class DataConfig:
-    csv_path = __data_config['CSV_PATH']
-
-def configure_db_connection(schema: str):
-    return DbConnection(
-        type="mysql",
-        host=DbConfig.HOST,
-        port=DbConfig.PORT,
-        user=DbConfig.USER,
-        password=DbConfig.PASSWORD,
-        schema=schema
-    )
+    csv_path = os.path.abspath(data_config['DATA_CSV_PATH'])
+    def get_csv_path(file_name: str):
+        return os.path.join(DataConfig.csv_path, file_name)
