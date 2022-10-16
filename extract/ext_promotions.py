@@ -30,8 +30,6 @@ def extract_promotions(db_con: Engine):
             promotions_dict["promo_begin_date"].append(begin_date)
             promotions_dict["promo_end_date"].append(end_date)
     if promotions_dict["promo_id"]:
+        db_con.connect().execute(f'TRUNCATE TABLE promotions')
         df_promotions = pd.DataFrame(promotions_dict)
         df_promotions.to_sql('promotions', db_con, if_exists="append",index=False)
-
-def truncate_promotions(db_con: Engine):
-    db_con.connect().execute(f'TRUNCATE TABLE promotions')

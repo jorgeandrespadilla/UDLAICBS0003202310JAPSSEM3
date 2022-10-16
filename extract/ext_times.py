@@ -50,8 +50,6 @@ def extract_times(db_con: Engine):
             times_dict['calendar_quarter_desc'].append(cal_quarter)
             times_dict['calendar_year'].append(cal_year)
     if times_dict["time_id"]:
+        db_con.connect().execute(f'TRUNCATE TABLE times')
         df_times = pd.DataFrame(times_dict)
         df_times.to_sql('times', db_con, if_exists="append",index=False)
-
-def truncate_times(db_con: Engine):
-    db_con.connect().execute(f'TRUNCATE TABLE times')
