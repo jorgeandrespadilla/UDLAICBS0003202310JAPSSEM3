@@ -22,7 +22,9 @@ def connection_handler(schema: str):
                     raise Exception(f"The give database type {db_type} is not valid")
                 elif ses_db == -2:
                     raise Exception("Error trying connect to the database")
-                return func(ses_db, *args, **kwargs)
+                ses_db.begin()
+                func(ses_db, *args, **kwargs)
+                ses_db.dispose()
             except:
                 traceback.print_exc()
         return wrapper
