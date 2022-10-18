@@ -2,6 +2,10 @@
 
 *Jorge Andrés Padilla*
 
+## Descripción
+
+Este repositorio contiene el código fuente
+
 ## Instalación de paquetes
 
 Para instalar los paquetes necesarios usados por Python, se debe ejecutar el comando `pip install -r requirements.txt`
@@ -17,6 +21,13 @@ El archivo `data.properties` contiene la configuración de acceso a los archivos
 Las evidencias se encuentran en el directorio `evidencesSem3`.
 
 El archivo `sor-model.png` contiene el modelo de datos de la base SOR, y el archivo `stg-model.png` contiene el modelo de datos de la base Staging. Adicionalmente, el directorio `evidencesSem3/record-cound` contiene las imágenes con el conteo de registros de cada tabla de la base de Staging.
+
+## Ejecución de scripts SQL
+
+Los scripts SQL se encuentran ubicados en el directorio `sql`, y se deben ejecutar en una base de datos MySQL en el siguiente orden:
+1. `initialization.sql` (inicialización de esquemas)
+2. `stg-tables.sql` (tablas de la base de Staging)
+3. `sor-tables.sql` (tablas de la base SOR)
 
 ## Ejecución de pruebas
 
