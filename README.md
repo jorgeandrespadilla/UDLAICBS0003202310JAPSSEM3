@@ -4,7 +4,7 @@
 
 ## Descripción
 
-Este repositorio contiene el código fuente
+Este repositorio contiene el código fuente usado para el ejercicio de implementación de Bodegas de Datos. Para ello, se utilizó Python 3.9 y MySQL 8.0 para el almacenamiento de datos.
 
 ## Instalación de paquetes
 
@@ -26,8 +26,8 @@ El archivo `sor-model.png` contiene el modelo de datos de la base SOR, y el arch
 
 Los scripts SQL se encuentran ubicados en el directorio `sql`, y se deben ejecutar en una base de datos MySQL en el siguiente orden:
 1. `initialization.sql` (inicialización de esquemas)
-2. `stg-tables.sql` (tablas de la base de Staging)
-3. `sor-tables.sql` (tablas de la base SOR)
+2. `stg-tables.sql` (creación de tablas de la base de Staging)
+3. `sor-tables.sql` (creación de tablas de la base SOR)
 
 ## Ejecución de pruebas
 
