@@ -37,6 +37,6 @@ def extract_sales(db_con: Engine):
             sales_dict['quantity_sold'].append(quantity_sold)
             sales_dict['amount_sold'].append(amount_sold)
     if sales_dict["prod_id"]:
-        db_con.connect().execute(f'TRUNCATE TABLE sales')
+        db_con.connect().execute(f'TRUNCATE TABLE sales_ext')
         df_sales = pd.DataFrame(sales_dict)
-        df_sales.to_sql('sales', db_con, if_exists="append",index=False)
+        df_sales.to_sql('sales_ext', db_con, if_exists="append",index=False)

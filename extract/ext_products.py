@@ -50,7 +50,7 @@ def extract_products(db_con: Engine):
             products_dict["prod_list_price"].append(list_price)
             products_dict["prod_min_price"].append(min_price)
     if products_dict["prod_id"]:
-        db_con.connect().execute(f'TRUNCATE TABLE products')
+        db_con.connect().execute(f'TRUNCATE TABLE products_ext')
         df_products = pd.DataFrame(products_dict)
-        df_products.to_sql('products', db_con, if_exists="append",index=False)
+        df_products.to_sql('products_ext', db_con, if_exists="append",index=False)
     

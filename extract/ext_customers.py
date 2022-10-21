@@ -64,6 +64,6 @@ def extract_customers(db_con: Engine):
             customers_dict["cust_credit_limit"].append(credit_limit)
             customers_dict["cust_email"].append(email)
     if customers_dict["cust_id"]:
-        db_con.connect().execute(f'TRUNCATE TABLE customers')
+        db_con.connect().execute(f'TRUNCATE TABLE customers_ext')
         df_customers = pd.DataFrame(customers_dict)
-        df_customers.to_sql('customers', db_con, if_exists="append",index=False)
+        df_customers.to_sql('customers_ext', db_con, if_exists="append",index=False)

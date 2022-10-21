@@ -26,6 +26,6 @@ def extract_countries(db_con: Engine):
             countries_dict["country_region"].append(reg)
             countries_dict["country_region_id"].append(reg_id)
     if countries_dict["country_id"]:
-        db_con.connect().execute(f'TRUNCATE TABLE countries')
+        db_con.connect().execute(f'TRUNCATE TABLE countries_ext')
         df_countries = pd.DataFrame(countries_dict)
-        df_countries.to_sql('countries', db_con, if_exists="append",index=False)
+        df_countries.to_sql('countries_ext', db_con, if_exists="append",index=False)
