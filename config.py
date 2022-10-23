@@ -25,5 +25,6 @@ class DbConfig:
 
 class DataConfig:
     csv_path = os.path.abspath(data_config['DATA_CSV_PATH'])
-    def get_csv_path(file_name: str):
+    @staticmethod
+    def get_csv_path(file_name: str) -> str:
         return os.path.join(DataConfig.csv_path, file_name)
