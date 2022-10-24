@@ -1,23 +1,26 @@
+import time
 import traceback
-from util.sql_helpers import SchemaConnection, connection_handler
-from util.etl_process import create_etl_process
 import extract
 import transform
 import load
+from util.sql_helpers import SchemaConnection,  connection_handler, create_etl_process
 
 @connection_handler
 def main(schema_con: SchemaConnection):
+    start = time.time()
     process_id = create_etl_process(schema_con.STG)
-    print(f'ETL process ID: {process_id}')
+    print(f'ETL process N°{process_id}')
     print('Extracting data...')
     extract.extract(schema_con.STG)
     print('Transforming data...')
     transform.transform(schema_con.STG, process_id)
     print('Loading data...')
     load.load(schema_con, process_id)
-    print('Process finished')
+    end = time.time()
+    print(f'ETL process finished in {end - start:.4f} seconds')
 
 try:
     main()
 except:
+    print("An error occurred while running the ETL process:")
     traceback.print_exc()
