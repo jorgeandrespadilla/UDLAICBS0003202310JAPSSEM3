@@ -1,9 +1,9 @@
 import functools
-from re import L
 import traceback
-from typing import List, Tuple, Union
+from typing import List, Tuple
 from sqlalchemy.engine import Engine
 import pandas as pd
+from pandas.api.types import is_datetime64_any_dtype as is_pd_datetime
 from util.db_connection import DbConnection
 from config import DbConfig
 
@@ -51,6 +51,25 @@ def connection_handler(func):
         except:
             traceback.print_exc()
     return wrapper
+
+def read_sql_table(
+    table_name: str, 
+    columns: List[str],
+    con: Engine,
+):
+    """
+    Reads a table from the database and returns a dataframe with the specified columns.
+    """
+    df = pd.read_sql_table(
+        table_name=table_name,
+        columns=columns,
+        con=con
+    )
+    # Convert pandas timestamp columns to datetime
+    for column in df.columns:
+        if is_pd_datetime(df[column]):
+            df[column] = df[column].dt.date
+    return df
 
 def map_relationships(
     df: pd.DataFrame,
