@@ -3,7 +3,6 @@ import traceback
 from typing import List, Tuple
 from sqlalchemy.engine import Engine
 import pandas as pd
-from pandas.api.types import is_datetime64_any_dtype as is_pd_datetime
 from util.db_connection import DbConnection
 from config import DbConfig
 
@@ -52,23 +51,33 @@ def connection_handler(func):
             traceback.print_exc()
     return wrapper
 
-def read_sql_table(
+def create_etl_process(db_con: Engine) -> int:
+    """Creates an ETL process record in the database and returns its ID."""
+    etl_process_id = db_con.execute('INSERT INTO etl_processes VALUES ()').lastrowid
+    return int(etl_process_id)
+
+def read_table(
     table_name: str, 
     columns: List[str],
     con: Engine,
+    with_process_id: int = None,
+    etl_process_column: str = 'ETL_PROC_ID',
 ):
     """
     Reads a table from the database and returns a dataframe with the specified columns.
+    If an ETL process ID is specified, it will filter the data by it.
     """
-    df = pd.read_sql_table(
-        table_name=table_name,
-        columns=columns,
-        con=con
-    )
-    # Convert pandas timestamp columns to datetime
-    for column in df.columns:
-        if is_pd_datetime(df[column]):
-            df[column] = df[column].dt.date
+    columns_str = ', '.join(columns)
+    if with_process_id is None:
+        df = pd.read_sql_query(
+            sql=f'SELECT {columns_str} FROM {table_name}',
+            con=con
+        )
+    else:
+        df = pd.read_sql_query(
+            sql=f'SELECT {columns_str} FROM {table_name} WHERE {etl_process_column} = {with_process_id}',
+            con=con
+        )
     return df
 
 def map_relationships(
