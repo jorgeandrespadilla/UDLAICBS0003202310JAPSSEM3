@@ -70,11 +70,10 @@ def map_relations(
     return mapped_df
             
 def merge_and_insert(
-    source_table: str,
     source_df: pd.DataFrame,
     target_table: str,
     target_df: pd.DataFrame,
-    key_column: str,
+    key_columns: List[str], # The column that will be used to merge the dataframes
     db_con: Engine,
     id_column: str = "ID",
 ) -> None:
@@ -83,17 +82,31 @@ def merge_and_insert(
     If the data already exists, it will be updated.
     Otherwise, it will be inserted.
     """
-    filtered_target_df = target_df.drop(columns=[id_column])
-    df_result = source_df.merge(filtered_target_df, how='outer', indicator=True).query('_merge == "left_only"').drop('_merge', axis=1)
+    
+    # Remove the ID column from the target dataframe
+    target_df_without_id = target_df.drop(columns=[id_column])
+    
+    # Merge the dataframes including
+    df_result = source_df.merge(target_df_without_id, how='outer', indicator=True).query('_merge == "left_only"').drop('_merge', axis=1)
+    
     if not df_result.empty:
-        df_to_insert = df_result[~df_result[key_column].isin(target_df[key_column])]
+        
+        # Add temporal ID column that will be used to filter the data based on a composite key
+        df_result['tmp_id'] = df_result.apply(lambda row: '-'.join([str(row[key_col]) for key_col in key_columns]), axis=1)
+        target_df['tmp_id'] = target_df.apply(lambda row: '-'.join([str(row[key_col]) for key_col in key_columns]), axis=1)
+        
+        # Insert the new records
+        df_to_insert = df_result[~df_result['tmp_id'].isin(target_df['tmp_id'])]
         if not df_to_insert.empty:
-            df_to_insert.to_sql(name=target_table, con=db_con, if_exists='append', index=False)
-        df_to_update = df_result[df_result[key_column].isin(target_df[key_column])]
+            df_without_tmp_id = df_to_insert.drop(columns=['tmp_id']) # Remove the temporal ID column
+            df_without_tmp_id.to_sql(name=target_table, con=db_con, if_exists='append', index=False)
+        
+        # Update the existing records
+        df_to_update = df_result[df_result['tmp_id'].isin(target_df['tmp_id'])]
         if not df_to_update.empty:
-            # Add ID column
-            df_to_update = df_to_update.merge(target_df[[id_column, key_column]], how='left', on=key_column).set_index(id_column)
-            for index, row in df_to_update.iterrows():
+            df_to_update = df_to_update.merge(target_df[[id_column, 'tmp_id']], how='left', on='tmp_id').set_index(id_column) # Add ID column
+            df_without_tmp_id = df_to_update.drop(columns=['tmp_id'])
+            for index, row in df_without_tmp_id.iterrows():
                 query_fields = []
                 query_data = []
                 for column, value in row.items():
