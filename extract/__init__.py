@@ -1,6 +1,4 @@
-from config import DbConfig
 from sqlalchemy.engine import Engine
-from util.connection_handler import connection_handler
 from extract.ext_channels import extract_channels
 from extract.ext_countries import extract_countries
 from extract.ext_customers import extract_customers
@@ -9,7 +7,6 @@ from extract.ext_promotions import extract_promotions
 from extract.ext_sales import extract_sales
 from extract.ext_times import extract_times
 
-@connection_handler(DbConfig.Schema.STG)
 def extract(db_con: Engine):
     extract_times(db_con)
     extract_channels(db_con)

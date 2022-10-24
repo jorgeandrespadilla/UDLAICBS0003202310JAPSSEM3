@@ -12,7 +12,7 @@ def read_sql_by_process(
     columns: List[str],
     etl_process_id: int,
     con: Engine,
-    etl_process_column: str = 'etl_proc_id',
+    etl_process_column: str = 'ETL_PROC_ID',
 ) -> pd.DataFrame:
     """Reads a table records from the database filtered by ETL process ID."""
     columns_str = ', '.join(columns)

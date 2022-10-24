@@ -27,5 +27,5 @@ def extract_channels(db_con: Engine):
             channels_dict["channel_class_id"].append(cls_id)
     if channels_dict["channel_id"]:
         db_con.connect().execute(f'TRUNCATE TABLE channels_ext')
-        df_countries = pd.DataFrame(channels_dict)
-        df_countries.to_sql('channels_ext', db_con, if_exists="append",index=False)
+        df_channels = pd.DataFrame(channels_dict)
+        df_channels.to_sql('channels_ext', db_con, if_exists="append",index=False)
