@@ -90,10 +90,12 @@ def map_relationships(
     mapped_df = df.copy()
     for relation in relationships:
         destination_column, source_table, source_column = relation
-        mapped_ids = pd.read_sql_query(
-            sql=f'SELECT {id_column}, {source_column} FROM {source_table}',
+        source_data = read_table(
+            columns=[id_column, source_column],
+            table_name=source_table,
             con=con,
-        ).set_index(source_column).to_dict()[id_column]
+        )
+        mapped_ids = source_data.set_index(source_column)[id_column].to_dict()
         mapped_df[destination_column] = mapped_df[source_column].apply(lambda x: mapped_ids[x])
     return mapped_df
             
