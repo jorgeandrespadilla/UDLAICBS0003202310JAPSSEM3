@@ -52,16 +52,16 @@ def connection_handler(func):
             traceback.print_exc()
     return wrapper
 
-def map_relations(
+def map_relationships(
     df: pd.DataFrame,
     con: Engine,
-    relations: List[Tuple[str, str, str]],
+    relationships: List[Tuple[str, str, str]], # destination_column, source_table, source_column
     id_column: str = "ID",
 ) -> None:
-    """Creates a new dataframe including the relations between the tables."""
+    """Creates a new dataframe including the relations between the tables using their IDs."""
     mapped_df = df.copy()
-    for relation in relations:
-        destination_column, source_column, source_table = relation
+    for relation in relationships:
+        destination_column, source_table, source_column = relation
         mapped_ids = pd.read_sql_query(
             sql=f'SELECT {id_column}, {source_column} FROM {source_table}',
             con=con,
