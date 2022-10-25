@@ -11,7 +11,7 @@ table_columns = [
 def transform_countries(db_con: Engine, etl_process_id: int) -> None:
     # Read from extract table
     countries_ext = read_table(
-        table_name='countries_ext',
+        table_name='COUNTRIES_EXT',
         columns=table_columns,
         con=db_con
     )
@@ -24,4 +24,4 @@ def transform_countries(db_con: Engine, etl_process_id: int) -> None:
         # Add ETL process ID
         df_countries['ETL_PROC_ID'] = etl_process_id
         # Write to transform table
-        df_countries.to_sql('countries_tra', con=db_con, if_exists='append',index=False)
+        df_countries.to_sql('COUNTRIES_TRA', con=db_con, if_exists='append',index=False)

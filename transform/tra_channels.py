@@ -11,7 +11,7 @@ table_columns = [
 def transform_channels(db_con: Engine, etl_process_id: int) -> None:
     # Read from extract table
     channels_ext = read_table(
-        table_name='channels_ext',
+        table_name='CHANNELS_EXT',
         columns=table_columns,
         con=db_con
     )
@@ -24,4 +24,4 @@ def transform_channels(db_con: Engine, etl_process_id: int) -> None:
         # Add ETL process ID
         df_channels['ETL_PROC_ID'] = etl_process_id
         # Write to transform table
-        df_channels.to_sql('channels_tra', con=db_con, if_exists='append',index=False)
+        df_channels.to_sql('CHANNELS_TRA', con=db_con, if_exists='append',index=False)

@@ -9,19 +9,19 @@ table_columns = [
 
 def load_channels(schema_con: SchemaConnection, etl_process_id: int) -> None:
     channels_tra = read_table(
-        table_name='channels_tra',
+        table_name='CHANNELS_TRA',
         columns=table_columns,
         con=schema_con.STG,
         with_process_id=etl_process_id
     )
     channels_sor = read_table(
-        table_name='channels',
+        table_name='CHANNELS',
         columns=['ID', *table_columns],
         con=schema_con.SOR
     )
     merge_and_insert(
         source_df=channels_tra,
-        target_table='channels',
+        target_table='CHANNELS',
         target_df=channels_sor,
         key_columns=['CHANNEL_ID'],
         db_con=schema_con.SOR

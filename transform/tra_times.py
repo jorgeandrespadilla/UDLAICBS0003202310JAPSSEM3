@@ -19,7 +19,7 @@ table_columns = [
 def transform_times(db_con: Engine, etl_process_id: int) -> None:
     # Read from extract table
     times_ext = read_table(
-        table_name='times_ext',
+        table_name='TIMES_EXT',
         columns=table_columns,
         con=db_con
     )
@@ -38,4 +38,4 @@ def transform_times(db_con: Engine, etl_process_id: int) -> None:
         # Add ETL process ID
         df_times['ETL_PROC_ID'] = etl_process_id
         # Write to transform table
-        df_times.to_sql('times_tra', con=db_con, if_exists='append',index=False)
+        df_times.to_sql('TIMES_TRA', con=db_con, if_exists='append',index=False)

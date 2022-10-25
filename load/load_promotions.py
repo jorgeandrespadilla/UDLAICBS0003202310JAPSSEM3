@@ -10,19 +10,19 @@ table_columns = [
 
 def load_promotions(schema_con: SchemaConnection, etl_process_id: int) -> None:
     promotions_tra = read_table(
-        table_name='promotions_tra',
+        table_name='PROMOTIONS_TRA',
         columns=table_columns,
         con=schema_con.STG,
         with_process_id=etl_process_id
     )
     promotions_sor = read_table(
-        table_name='promotions',
+        table_name='PROMOTIONS',
         columns=['ID', *table_columns],
         con=schema_con.SOR
     )
     merge_and_insert(
         source_df=promotions_tra,
-        target_table='promotions',
+        target_table='PROMOTIONS',
         target_df=promotions_sor,
         key_columns=['PROMO_ID'],
         db_con=schema_con.SOR
